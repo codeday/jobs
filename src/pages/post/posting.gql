@@ -1,0 +1,28 @@
+query JobPostingQuery ($id: String!) {
+  cms {
+    hiringPost(id: $id) {
+      title
+      paid
+      type
+      description {
+        json
+      }
+      url
+      regions (limit: 15) {
+        items {
+          name
+        }
+      }
+      company {
+        name
+        url
+        logo {
+          url(transform: {width:600, height:300, resizeStrategy:PAD})
+        }
+        alumniReferralAccounts {
+          name
+        }
+      }
+    }
+  }
+}

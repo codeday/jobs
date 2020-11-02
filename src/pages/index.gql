@@ -1,0 +1,36 @@
+query IndexQuery {
+  cms {
+    hiringCompanies(order:[featured_DESC, sys_publishedAt_DESC], limit: 50) {
+      items {
+        featured
+        name
+        description {
+          json
+        }
+        url
+        logo {
+          url(transform: {width:600, height:300, resizeStrategy:PAD})
+        }
+        relatedSponsor {
+          name
+        }
+        alumniReferralAccounts {
+          name
+          email
+        }
+        linkedFrom {
+          hiringPosts (limit: 10) {
+            items {
+              sys {
+                id
+              }
+              title
+              type
+              paid
+            }
+          }
+        }
+      }
+    }
+  }
+}
