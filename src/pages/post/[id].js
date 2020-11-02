@@ -14,8 +14,8 @@ import { JobPostingQuery } from './posting.gql';
 
 export default function Home({ query, id }) {
   if (!query) {
-    signIn('auth0');
-    return null;
+    setTimeout(() => signIn('auth0'), 600);
+    return <></>;
   }
   const { hiringPost } = query.cms;
 

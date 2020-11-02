@@ -6,8 +6,8 @@ import Page from '../components/Page';
 
 export default function Submit({ username }) {
   if (!username) {
-    signIn('auth0');
-    return null;
+    setTimeout(() => signIn('auth0'), 600);
+    return <></>;
   }
 
 	return (

@@ -12,8 +12,8 @@ import { IndexQuery } from './index.gql';
 
 export default function Home({ query }) {
   if (!query) {
-    signIn('auth0');
-    return null;
+    setTimeout(() => signIn('auth0'), 600);
+    return <></>;
   }
   const { hiringCompanies } = query.cms;
 
