@@ -4,6 +4,8 @@ import { getSession, signIn, useSession } from 'next-auth/client'
 import { apiFetch } from '@codeday/topo/utils';
 import Box, { Grid } from '@codeday/topo/Atom/Box';
 import Content from '@codeday/topo/Molecule/Content';
+import Text from '@codeday/topo/Atom/Text';
+import Button from '@codeday/topo/Atom/Button';
 import Page from '../components/Page';
 import Sidebar from '../components/Sidebar';
 import HiringCompany from '../components/HiringCompany';
@@ -12,12 +14,15 @@ import { IndexQuery } from './index.gql';
 
 export default function Home({ query }) {
   const [ session, loading ] = useSession();
-  if (!loading) {
-    signIn('auth0');
-  }
 
   if (!query) {
-    return <>Redirecting you to create/login to a CodeDay account...</>;
+    return (
+      <Content p={8} textAlign="center">
+        <Text>This portal is only for the CodeDay community.</Text>
+        <Text>You will need to log into or create a CodeDay account to access this site.</Text>
+        <Button onClick={() => signIn('auth0')} variantColor="red">Log Into CodeDay Account</Button>
+      </Content>
+    )
   }
   const { hiringCompanies } = query.cms;
 
