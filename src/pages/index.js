@@ -23,7 +23,16 @@ export default function Home({ query }) {
         <Grid templateColumns={{base: '1fr', md: '1fr 3fr'}} gap={8}>
           <Sidebar />
           <Box>
-            {hiringCompanies?.items?.sort((a, b) => b.featured - a.featured).map((c) => <HiringCompany company={c} />)}
+            {
+              hiringCompanies
+                ?.items
+                ?.sort((a, b) => {
+                  if (a.featured && !b.featured) return -1;
+                  if (b.featured && !a.featured) return 1;
+                  return (b.linkedFrom?.hiringPosts?.items?.length || 0) - (a.linkedFrom?.hiringPosts?.items?.length || 0);
+                })
+                .map((c) => <HiringCompany company={c} />)
+              }
           </Box>
         </Grid>
       </Content>

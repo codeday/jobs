@@ -5,6 +5,7 @@ import Button from '@codeday/topo/Atom/Button';
 import Header, { SiteLogo, Menu } from '@codeday/topo/Organism/Header';
 import Footer from '@codeday/topo/Organism/Footer';
 import { CodeDay } from '@codeday/topo/Atom/Logo';
+import { apiFetch } from '@codeday/topo/utils';
 
 const DOMAIN = 'https://jobs.codeday.org';
 
@@ -57,3 +58,17 @@ export default ({ children, title, darkHeader, slug }) => (
     </Box>
   </>
 );
+
+export async function getStaticProps({ params: { slug } }) {
+  const { post } = (await apiFetch(postQuery(slug))).blog;
+  if (post) {
+    post.date = moment(post.date).format('MMMM DD, YYYY');
+  }
+
+  return {
+    props: {
+      post,
+    },
+    revalidate: 120,
+  };
+}
