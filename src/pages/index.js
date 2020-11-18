@@ -1,6 +1,6 @@
 import React from 'react';
 import { print } from 'graphql';
-import { getSession, signIn } from 'next-auth/client'
+import { getSession, signIn, useSession } from 'next-auth/client'
 import { apiFetch } from '@codeday/topo/utils';
 import Box, { Grid } from '@codeday/topo/Atom/Box';
 import Content from '@codeday/topo/Molecule/Content';
@@ -11,9 +11,13 @@ import { makeJwt } from '../util/auth';
 import { IndexQuery } from './index.gql';
 
 export default function Home({ query }) {
+  const [ session, loading ] = useSession();
+  if (!loading) {
+    signIn('auth0');
+  }
+
   if (!query) {
-    setTimeout(() => signIn('auth0'), 600);
-    return <></>;
+    return <>Redirecting you to create/login to a CodeDay account...</>;
   }
   const { hiringCompanies } = query.cms;
 
