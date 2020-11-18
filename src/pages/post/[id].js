@@ -1,6 +1,6 @@
 import React from 'react';
 import { print } from 'graphql';
-import { getSession, signIn } from 'next-auth/client'
+import { getSession, signIn, useSession } from 'next-auth/client'
 import { apiFetch } from '@codeday/topo/utils';
 import Box, { Grid } from '@codeday/topo/Atom/Box';
 import Content from '@codeday/topo/Molecule/Content';
@@ -13,9 +13,16 @@ import Sidebar from '../../components/Sidebar';
 import { JobPostingQuery } from './posting.gql';
 
 export default function Home({ query, id }) {
+  const [ session, loading ] = useSession();
+
   if (!query) {
-    setTimeout(() => signIn('auth0'), 600);
-    return <></>;
+    return (
+      <Content p={8} textAlign="center">
+        <Text>This portal is only for the CodeDay community.</Text>
+        <Text>You will need to log into or create a CodeDay account to access this site.</Text>
+        <Button onClick={() => signIn('auth0')} variantColor="red">Log Into CodeDay Account</Button>
+      </Content>
+    )
   }
   const { hiringPost } = query.cms;
 
