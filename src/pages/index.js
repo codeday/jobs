@@ -13,6 +13,12 @@ import { makeJwt } from '../util/auth';
 import { IndexQuery } from './index.gql';
 
 export default function Home({ query }) {
+  const [ session, loading ] = useSession();
+
+  if (session && !query && typeof window !== 'undefined') {
+    window.location.reload();
+  }
+
   if (!query) {
     return (
       <Content p={8} textAlign="center">
