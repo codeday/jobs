@@ -13,8 +13,6 @@ import Sidebar from '../../components/Sidebar';
 import { JobPostingQuery } from './posting.gql';
 
 export default function Home({ query, id }) {
-  const [ session, loading ] = useSession();
-
   if (!query) {
     return (
       <Content p={8} textAlign="center">
