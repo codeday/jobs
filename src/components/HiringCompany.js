@@ -16,7 +16,7 @@ export default function ({ company, ...props }) {
         <Heading as="h2" fontSize="1em" d="inline-block" position="relative" top={1}>{company.name}</Heading>
         {company.relatedSponsor?.name && (
           <Box d="inline-block" color={featureColorDark} fontSize="sm" ml={2}>
-            (Sponsored)
+            (CodeDay Sponsor)
           </Box>
         )}
       </Box>
