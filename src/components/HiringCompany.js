@@ -7,13 +7,22 @@ import List, { Item as Li } from '@codeday/topo/Atom/List';
 
 export default function ({ company, ...props }) {
   const featureColor = company.featured ? "yellow.50" : "gray.100";
-  const featureColorDark = company.featured ? "yellow.600" : "current.text";
+  const featureColorDark = company.featured ? "yellow.800" : "gray.900";
 
   return (
     <Box mb={2} borderWidth={1} rounded="sm" {...props}>
       <Box bg={featureColor} p={2} pl={4} pr={4} fontSize="2xl">
         <Image src={company.logo.url} alt="" height="2.5em" d="inline-block" mr={4} />
-        <Heading as="h2" fontSize="1em" d="inline-block" position="relative" top={1}>{company.name}</Heading>
+        <Heading
+          as="h2"
+          fontSize="1em"
+          d="inline-block"
+          position="relative"
+          color={featureColorDark}
+          top={1}
+        >
+          {company.name}
+        </Heading>
         {company.relatedSponsor?.name && (
           <Box d="inline-block" color={featureColorDark} fontSize="sm" ml={2}>
             (CodeDay Sponsor)

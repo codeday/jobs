@@ -52,7 +52,7 @@ export default ({
           </a>
         </SiteLogo>
         <Menu>
-          <Button as="a" href="/advisors">Advisors</Button>
+          <Button as="a" href="/advisors" mr={4}>Advisors</Button>
           <Button as="a" href="/submit">Add Company / Referral</Button>
         </Menu>
       </Header>
