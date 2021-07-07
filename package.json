@@ -13,6 +13,7 @@
     "@emotion/core": "^10.1.1",
     "@emotion/styled": "^10.0.27",
     "babel-plugin-inline-import-graphql-ast": "^2.4.1",
+    "email-validator": "^2.0.4",
     "emotion-theming": "^10.0.27",
     "graphql": "^15.4.0",
     "graphql-request": "^3.4.0",

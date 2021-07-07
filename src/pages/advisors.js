@@ -9,6 +9,7 @@ import Page from '../components/Page';
 import Button from '@codeday/topo/Atom/Button';
 import { default as Input } from '@codeday/topo/Atom/Input/Text';
 import { useToasts, apiFetch } from '@codeday/topo/utils';
+import { validate as validateEmail } from 'email-validator';
 import { getAdvisorToken } from '../util/advisorToken';
 import { GetMyPendingRequests, CreateRequest } from './advisors.gql';
 
@@ -93,7 +94,7 @@ export default function ({ hasSession, advisorToken, pendingRequests: pendingReq
             <Button
               variantColor="blue"
               size="lg"
-              disabled={!(givenName && familyName && email) || isLoading || pendingRequests.RESUME}
+              disabled={!(givenName && familyName && validateEmail(email)) || isLoading || pendingRequests.RESUME}
               isLoading={isLoading}
               onClick={() => {
                 uploadRef.current.click();
@@ -106,7 +107,7 @@ export default function ({ hasSession, advisorToken, pendingRequests: pendingReq
             <Button
               variantColor="purple"
               size="lg"
-              disabled={!(givenName && familyName && email) || isLoading || pendingRequests.INTERVIEW}
+              disabled={!(givenName && familyName && validateEmail(email)) || isLoading || pendingRequests.INTERVIEW}
               isLoading={isLoading}
               onClick={makeUploadFn('INTERVIEW')}
             >
