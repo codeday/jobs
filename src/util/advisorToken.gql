@@ -1,0 +1,10 @@
+query AdvisorTokenAccountInfo ($username: String!){
+  account {
+    getUser(where:{ username: $username }, fresh: true) {
+      name
+      roles {
+        id
+      }
+    }
+  }
+}

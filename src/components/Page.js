@@ -9,7 +9,9 @@ import { apiFetch } from '@codeday/topo/utils';
 
 const DOMAIN = 'https://jobs.codeday.org';
 
-export default ({ children, title, darkHeader, slug }) => (
+export default ({
+  children, title, darkHeader, slug,
+}) => (
   <>
     <DefaultSeo
       title={title ? `${title} ~ CodeDay Jobs` : 'CodeDay Jobs'}
@@ -30,26 +32,27 @@ export default ({ children, title, darkHeader, slug }) => (
     <Box position="relative">
       <Header darkBackground={darkHeader} gradAmount={darkHeader && 'lg'} underscore position="relative" zIndex={1000}>
         <SiteLogo>
-            <a href="https://www.codeday.org/">
-              <CodeDay withText />
-            </a>
-            <a href="/">
-              <Text
-                as="span"
-                d="inline"
-                letterSpacing="-2px"
-                fontFamily="heading"
-                position="relative"
-                top={1}
-                ml={1}
-                textDecoration="underline"
-                bold
-              >
-                Jobs
-              </Text>
-            </a>
+          <a href="https://www.codeday.org/">
+            <CodeDay withText />
+          </a>
+          <a href="/">
+            <Text
+              as="span"
+              d="inline"
+              letterSpacing="-2px"
+              fontFamily="heading"
+              position="relative"
+              top={1}
+              ml={1}
+              textDecoration="underline"
+              bold
+            >
+              Jobs
+            </Text>
+          </a>
         </SiteLogo>
         <Menu>
+          <Button as="a" href="/advisors">Advisors</Button>
           <Button as="a" href="/submit">Add Company / Referral</Button>
         </Menu>
       </Header>

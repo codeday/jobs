@@ -1,0 +1,16 @@
+query GetMyPendingRequests {
+  advisors {
+    pendingRequests {
+      requestType
+      pendingRequests
+    }
+  }
+}
+
+mutation CreateRequest(
+  $type: AdvisorsRequestType!, $givenName: String!, $familyName: String!, $email: String!, $resume: Upload
+) {
+  advisors {
+    createRequest(type: $type, givenName: $givenName, familyName: $familyName, email: $email, resume: $resume)
+  }
+}
