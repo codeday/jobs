@@ -4,6 +4,7 @@ fragment ProfileInformation on AdvisorsProfile {
   username
   givenName
   familyName
+  email
   urlResume
   urlGithub
   urlWebsite

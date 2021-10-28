@@ -27,7 +27,6 @@ export default function ({ hasSession, advisorToken, pendingRequests: pendingReq
 
   const makeUploadFn = (type, resume) => async () => {
     setIsLoading(true);
-    console.log({ givenName, familyName, email, type, resume });
     try {
       const resp = await apiFetch(
         print(CreateRequest),
