@@ -1,0 +1,30 @@
+fragment RecommendationInformation on AdvisorsRecommendation {
+  id
+  username
+  updatedAt
+  givenName
+  familyName
+  title
+  employer
+  relation
+  recommendation
+  skillTechnical
+  skillEngineering
+  skillInterpersonal
+}
+
+mutation CreateRecommendation ($username: String!, $data: AdvisorsRecommendationCreateInput!, $authorUsername: String) {
+  advisors {
+    newRecommendation: createRecommendation(username: $username, data: $data, authorUsername: $authorUsername) {
+      ...RecommendationInformation
+    }
+  }
+}
+
+mutation EditRecommendation ($id: String!, $data: AdvisorsRecommendationEditInput!) {
+  advisors {
+    newRecommendation: editRecommendation(id: $id, data: $data) {
+      ...RecommendationInformation
+    }
+  }
+}

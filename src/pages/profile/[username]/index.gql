@@ -1,0 +1,10 @@
+#import "../../../components/Recommendation.gql"
+#import "../../../components/Profile.gql"
+
+query GetProfile($username: String!) {
+  advisors {
+    profile(username: $username) {
+      ...ProfileInformation
+    }
+  }
+}

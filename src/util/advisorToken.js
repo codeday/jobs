@@ -7,7 +7,14 @@ import { GetAdvisorTokenAccountInfo } from './advisorToken.gql';
 
 const { serverRuntimeConfig } = getConfig();
 
-export async function getAdvisorToken(session) {
+function getType(roleIds) {
+  if (roleIds.includes(serverRuntimeConfig.recAdminRole)) return 'a';
+  if (roleIds.includes(serverRuntimeConfig.recWriterRole)) return 'rec';
+  if (roleIds.includes(serverRuntimeConfig.advisorsAccessRole)) return 'req';
+  return 'com';
+}
+
+export async function getAdvisorToken(session, onlyAdvisors) {
   if (!session) return null;
 
   const token = sign({ scopes: 'read:users' }, serverRuntimeConfig.gqlSecret, { expiresIn: '5m' });
@@ -18,11 +25,11 @@ export async function getAdvisorToken(session) {
   );
 
   const roleIds = (account?.getUser?.roles || []).map((r) => r.id);
-
-  if (!roleIds.includes(serverRuntimeConfig.advisorsAccessRole)) return null;
+  const typ = getType(roleIds);
+  if (typ === 'com' && onlyAdvisors) return null;
 
   return sign(
-    { typ: 'req', username: session.user.name },
+    { typ, username: typ === 'a' ? undefined : session.user.name },
     serverRuntimeConfig.advisorsSecret,
     { audience: serverRuntimeConfig.advisorsAudience, expiresIn: '1w' },
   );

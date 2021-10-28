@@ -1,5 +1,4 @@
 import { print } from 'graphql';
-import { GraphQLClient } from 'graphql-request';
 import { getSession, signIn } from 'next-auth/client';
 import React, { useState, useReducer, useRef } from 'react';
 import Content from '@codeday/topo/Molecule/Content';
@@ -46,8 +45,8 @@ export default function ({ hasSession, advisorToken, pendingRequests: pendingReq
   if (!hasSession) {
     return (
       <Content p={8} textAlign="center">
-        <Text>This portal is only for the CodeDay community.</Text>
-        <Text>You will need to log into or create a CodeDay account to access this site.</Text>
+        <Text>This portal is only for students who are actively job-hunting.</Text>
+        <Text>You need to be logged into a CodeDay account with specific permission to access this tool.</Text>
         <Button onClick={() => signIn('auth0')} variantColor="red">Log Into CodeDay Account</Button>
       </Content>
     )
@@ -122,7 +121,7 @@ export default function ({ hasSession, advisorToken, pendingRequests: pendingReq
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  const advisorToken = await getAdvisorToken(session);
+  const advisorToken = await getAdvisorToken(session, true);
   if (!advisorToken) return { props: { hasSession: false } };
 
   const pendingRequestsResp = await apiFetch(

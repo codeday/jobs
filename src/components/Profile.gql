@@ -1,0 +1,43 @@
+#import "./Recommendation.gql"
+
+fragment ProfileInformation on AdvisorsProfile {
+  username
+  givenName
+  familyName
+  urlResume
+  urlGithub
+  urlWebsite
+  urlLinkedIn
+  searchOpen
+  searchInternships
+  searchFullTimeAt
+  workFteAt
+  workInternAt
+  gradHighSchoolAt
+  gradUniversityAt
+  recommendations {
+    ...RecommendationInformation
+  }
+}
+
+mutation EditProfile($username: String, $data: AdvisorsProfileEditInput!) {
+  advisors {
+    editProfile(username: $username, data: $data) {
+      ...ProfileInformation
+    }
+  }
+}
+
+mutation UploadResume($username: String, $resume: Upload!) {
+  advisors {
+    editProfile(username: $username, data: { resume: $resume }) {
+      ...ProfileInformation
+    }
+  }
+}
+
+query BuildResumePackage($username: String!) {
+  advisors {
+    buildResumePackage(username: $username)
+  }
+}
