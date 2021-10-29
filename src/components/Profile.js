@@ -214,13 +214,12 @@ export default function Profile({ profile: originalProfile, token, ...rest }) {
         </Box>
         <Box>
           <ProfileResumeBox
+            colorScheme="gray"
             edit={isEditor}
             token={token}
             profile={profile}
-            bg="blue.50"
-            borderColor="blue.600"
+            borderColor="gray.600"
             borderWidth={1}
-            color="blue.800"
             p={4}
             textAlign="center"
           />

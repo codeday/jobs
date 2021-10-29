@@ -11,7 +11,7 @@ import Button from '@codeday/topo/Atom/Button';
 import { print } from 'graphql';
 import { UploadResume, BuildResumePackage } from './Profile.gql';
 
-function ResumeButton({ profile, token }) {
+function ResumeButton({ profile, token, ...rest }) {
   const uploadRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const { success, error } = useToasts();
@@ -43,6 +43,7 @@ function ResumeButton({ profile, token }) {
         onClick={() => {
           uploadRef.current.click();
         }}
+        {...rest}
       >
         Upload Resume
       </Button>
@@ -50,32 +51,51 @@ function ResumeButton({ profile, token }) {
   );
 }
 
-export default function ProfileResumeBox({ profile, token, edit, ...rest }) {
+export default function ProfileResumeBox({ profile, token, edit, colorScheme, ...rest }) {
   const { typ } = decode(token);
   if (!profile?.username || (!profile.urlResume && !edit && typ !== 'a')) return <></>;
 
   return (
     <Box mb={8} {...rest}>
-      <Heading as="h3" fontSize="2xl">Resume</Heading>
+      <Heading as="h3" fontSize="2xl" mb={4}>Resume</Heading>
       {profile.urlResume && (
-        <Button as="a" href={profile.urlResume} target="_blank" mr={2}>Download Resume</Button>
+        <>
+          <Button
+            as="a"
+            colorScheme={colorScheme}
+            href={profile.urlResume}
+            target="_blank"
+            mb={2}
+          >
+            Download Resume
+          </Button>
+          <br />
+        </>
       )}
       {profile.urlResume && typ === 'a' && (
-        <Button
-          mr={2}
-          onClick={async () => {
-            const resp = await apiFetch(
-              print(BuildResumePackage),
-              { username: profile.username },
-              { 'X-Advisors-Authorization': `Bearer ${token}` },
-            );
-            window.open(resp?.advisors?.buildResumePackage);
-          }}
-        >
-          Build Resume Package
-        </Button>
+        <>
+          <Button
+            colorScheme={colorScheme}
+            mb={2}
+            onClick={async () => {
+              const resp = await apiFetch(
+                print(BuildResumePackage),
+                { username: profile.username },
+                { 'X-Advisors-Authorization': `Bearer ${token}` },
+              );
+              window.open(resp?.advisors?.buildResumePackage);
+            }}
+          >
+            Build Resume Package
+          </Button>
+          <br />
+        </>
       )}
-      <ResumeButton profile={profile} token={token} />
+      <ResumeButton
+        colorScheme={colorScheme}
+        profile={profile}
+        token={token}
+      />
     </Box>
   );
 }
