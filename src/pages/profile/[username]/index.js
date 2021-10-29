@@ -54,7 +54,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         token,
-        profile: {},
+        profile: { username: context.params.username },
         hasSession: true,
       },
     };

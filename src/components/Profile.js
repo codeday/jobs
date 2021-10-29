@@ -14,7 +14,7 @@ import { default as Select } from '@codeday/topo/Atom/Input/Select';
 import { default as Checkbox } from '@codeday/topo/Atom/Input/Checkbox';
 import { print } from 'graphql';
 import { validate as validateEmail } from 'email-validator';
-import { EditProfile, UploadResume, BuildResumePackage } from './Profile.gql';
+import { EditProfile, CreateProfile } from './Profile.gql';
 import { filterObject } from '../util/filterObject';
 import Recommendation from './Recommendation';
 import ProfileResumeBox from './ProfileResumeBox';
@@ -61,145 +61,172 @@ export default function Profile({ profile: originalProfile, token, ...rest }) {
     && editProfile.email && validateEmail(editProfile.email)
     && (!editProfile.urlGithub || editProfile.urlGithub.includes('://'))
     && (!editProfile.urlLinkedIn || editProfile.urlLinkedIn.includes('://'))
-    && (!editProfile.urlWebsite || editProfile.urlWebsite.includes('://'))
-    && editProfile.gradHighSchoolAt && editProfile.gradUniversityAt;
+    && (!editProfile.urlWebsite || editProfile.urlWebsite.includes('://'));
 
   return (
     <Box {...rest}>
-      <Heading as="h3" fontSize="2xl" mb={4}>Contact Info</Heading>
-      <Box mb={2}>
-        <Text mb={0} bold>Name</Text>
-        <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={2}>
-          <Input
-            placeholder="First (Given) Name"
-            defaultValue={profile.givenName}
-            onChange={(e) => setEditProfile({ givenName: e.target.value })}
-          />
-          <Input
-            placeholder="Last (Family) Name"
-            defaultValue={profile.familyName}
-            onChange={(e) => setEditProfile({ familyName: e.target.value })}
-          />
-        </Grid>
-      </Box>
+      <Heading as="h2" mb={8}>
+        {profile?.email ? 'Edit' : 'Create'} Profile
+        {editProfile.givenName && ` for ${editProfile.givenName}`}
+      </Heading>
+      <Grid templateColumns={{ base: '1fr', md: '3fr 1fr' }} gap={8}>
+        <Box>
+          <Heading as="h3" fontSize="2xl" mb={4} textAlign="center">Contact Info</Heading>
+          <Box mb={2}>
+            <Text mb={0} bold>Name</Text>
+            <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={2}>
+              <Input
+                placeholder="First (Given) Name"
+                defaultValue={profile.givenName}
+                onChange={(e) => setEditProfile({ givenName: e.target.value })}
+              />
+              <Input
+                placeholder="Last (Family) Name"
+                defaultValue={profile.familyName}
+                onChange={(e) => setEditProfile({ familyName: e.target.value })}
+              />
+            </Grid>
+          </Box>
 
-      <Box mb={2}>
-        <Text mb={0} bold>Email</Text>
-        <Input
-          placeholder="me@gmail.com"
-          defaultValue={profile.email}
-          onChange={(e) => setEditProfile({ email: e.target.value })}
-        />
-      </Box>
-
-      <Box mb={2}>
-        <Text mb={0} bold>Github (full URL)</Text>
-        <Input
-          placeholder="https://github.com/codeday"
-          defaultValue={profile.urlGithub}
-          onChange={(e) => setEditProfile({ urlGithub: e.target.value })}
-        />
-      </Box>
-
-      <Box mb={2}>
-        <Text mb={0} bold>LinkedIn (full URL)</Text>
-        <Input
-          placeholder="https://linkedin.com/in/codeday"
-          defaultValue={profile.urlLinkedIn}
-          onChange={(e) => setEditProfile({ urlLinkedIn: e.target.value })}
-        />
-      </Box>
-
-      <Box mb={2}>
-        <Text mb={0} bold>Personal Site (full URL)</Text>
-        <Input
-          placeholder="https://www.example.com/"
-          defaultValue={profile.urlWebsite}
-          onChange={(e) => setEditProfile({ urlWebsite: e.target.value })}
-        />
-      </Box>
-
-      <Heading as="h3" fontSize="2xl" mt={8} mb={4}>Academic Milestones</Heading>
-      <Box mb={2}>
-        <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={8}>
-          <Box>
-            <Text mb={0} bold>High School Graduation</Text>
-            <MonthYearPicker
-              defaultValue={profile?.gradHighSchoolAt}
-              onChange={(e) => setEditProfile({ gradHighSchoolAt: e })}
+          <Box mb={2}>
+            <Text mb={0} bold>Email</Text>
+            <Input
+              placeholder="me@gmail.com"
+              defaultValue={profile.email}
+              onChange={(e) => setEditProfile({ email: e.target.value })}
             />
           </Box>
-          <Box>
-            <Text mb={0} bold>College (Undergrad) Graduation</Text>
-            <MonthYearPicker
-              defaultValue={profile?.gradUniversityAt}
-              onChange={(e) => setEditProfile({ gradUniversityAt: e })}
+
+          <Box mb={2}>
+            <Text mb={0} bold>Github (full URL)</Text>
+            <Input
+              placeholder="https://github.com/codeday"
+              defaultValue={profile.urlGithub}
+              onChange={(e) => setEditProfile({ urlGithub: e.target.value })}
             />
           </Box>
-        </Grid>
-      </Box>
 
-      <Heading as="h3" fontSize="2xl" mt={8} mb={4}>Job Search</Heading>
-      <Box mb={2}>
-        <Grid templateColumns={{ base: '1fr', xl: 'repeat(2, 2fr) 3fr' }} gap={8}>
-          <Box>
-            <Text mb={0} bold>Searching now?</Text>
-            <Checkbox
-              defaultIsChecked={editProfile?.searchOpen}
-              onChange={(e) => setEditProfile({ searchOpen: e.target.checked })}
+          <Box mb={2}>
+            <Text mb={0} bold>LinkedIn (full URL)</Text>
+            <Input
+              placeholder="https://linkedin.com/in/codeday"
+              defaultValue={profile.urlLinkedIn}
+              onChange={(e) => setEditProfile({ urlLinkedIn: e.target.value })}
+            />
+          </Box>
+
+          <Box mb={2}>
+            <Text mb={0} bold>Personal Site (full URL)</Text>
+            <Input
+              placeholder="https://www.example.com/"
+              defaultValue={profile.urlWebsite}
+              onChange={(e) => setEditProfile({ urlWebsite: e.target.value })}
+            />
+          </Box>
+
+          <Heading as="h3" fontSize="2xl" mt={12} mb={4} textAlign="center">Academic Milestones</Heading>
+          <Box mb={2}>
+            <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={8}>
+              <Box>
+                <Text mb={0} bold>High School Graduation</Text>
+                <MonthYearPicker
+                  defaultValue={profile?.gradHighSchoolAt}
+                  onChange={(e) => setEditProfile({ gradHighSchoolAt: e })}
+                />
+              </Box>
+              <Box>
+                <Text mb={0} bold>College (Undergrad) Graduation</Text>
+                <MonthYearPicker
+                  defaultValue={profile?.gradUniversityAt}
+                  onChange={(e) => setEditProfile({ gradUniversityAt: e })}
+                />
+              </Box>
+            </Grid>
+          </Box>
+
+          <Heading as="h3" fontSize="2xl" mt={12} mb={4} textAlign="center">Job Search</Heading>
+          <Box mb={2}>
+            <Box mb={4}>
+              <Text mb={0} bold>Searching now?</Text>
+              <Checkbox
+                defaultIsChecked={editProfile?.searchOpen}
+                onChange={(e) => setEditProfile({ searchOpen: e.target.checked })}
+              >
+                I'm open to work, please share my resume.
+              </Checkbox>
+            </Box>
+            {editProfile?.searchOpen && (
+              <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={8}>
+                <Box>
+                  <Text mb={0} bold>Will you consider internships?</Text>
+                  <Checkbox
+                    defaultIsChecked={editProfile?.searchInternships}
+                    onChange={(e) => setEditProfile({ searchInternships: e.target.checked })}
+                  >
+                    I'm currently open to internships.
+                  </Checkbox>
+                </Box>
+                <Box>
+                  <Text mb={0} bold>When will you consider full-time jobs?</Text>
+                  <MonthYearPicker
+                    defaultValue={profile?.searchFullTimeAt}
+                    onChange={(e) => setEditProfile({ searchFullTimeAt: e })}
+                  />
+                </Box>
+              </Grid>
+            )}
+          </Box>
+
+          <Box textAlign="center" mt={8}>
+            <Button
+              size="lg"
+              colorScheme="green"
+              disabled={!isValid}
+              isLoading={isLoading}
+              onClick={async () => {
+                setIsLoading(true);
+                try {
+                  const res = await apiFetch(
+                    print(profile?.email ? EditProfile : CreateProfile),
+                    {
+                      username: profile.username,
+                      data: {
+                        ...filterObject(editProfile, ['username', 'id', 'urlResume', 'recommendations']),
+                        ...(editProfile?.searchOpen ? {} : {
+                          searchInternships: false,
+                          searchFullTimeAt: null,
+                        }),
+                      }
+                    },
+                    { 'X-Advisors-Authorization': `Bearer ${token}` },
+                  );
+                  success(profile?.email ? 'Updated!' : 'Created!');
+                  setProfile(res.advisors.editProfile);
+                } catch (ex) {
+                  error(ex.toString());
+                }
+                setIsLoading(false);
+              }}
             >
-              I'm open to work, please share my resume.
-            </Checkbox>
+              {profile?.email ? 'Save' : 'Create'}
+            </Button>
           </Box>
-          <Box>
-            <Text mb={0} bold>Will you consider internships?</Text>
-            <Checkbox
-              defaultIsChecked={editProfile?.searchInternships}
-              onChange={(e) => setEditProfile({ searchInternships: e.target.checked })}
-            >
-              I'm currently open to internships.
-            </Checkbox>
-          </Box>
-          <Box>
-            <Text mb={0} bold>When will you consider full-time jobs?</Text>
-            <MonthYearPicker
-              defaultValue={profile?.searchFullTimeAt}
-              onChange={(e) => setEditProfile({ searchFullTimeAt: e })}
-            />
-          </Box>
-        </Grid>
-      </Box>
+        </Box>
+        <Box>
+          <ProfileResumeBox
+            edit={isEditor}
+            token={token}
+            profile={profile}
+            bg="blue.50"
+            borderColor="blue.600"
+            borderWidth={1}
+            color="blue.800"
+            p={4}
+            textAlign="center"
+          />
+        </Box>
+      </Grid>
 
-      <Box textAlign="center">
-        <Button
-          size="lg"
-          colorScheme="green"
-          disabled={!isValid}
-          isLoading={isLoading}
-          onClick={async () => {
-            setIsLoading(true);
-            try {
-              const res = await apiFetch(
-                print(EditProfile),
-                {
-                  username: profile?.username, // TODO(@tylermenezes) Allow creation by admins
-                  data: filterObject(editProfile, ['username', 'id', 'urlResume', 'recommendations'])
-                },
-                { 'X-Advisors-Authorization': `Bearer ${token}` },
-              );
-              success(profile?.username ? 'Updated!' : 'Created!');
-              setProfile(res.advisors.editProfile);
-            } catch (ex) {
-              error(ex.toString());
-            }
-            setIsLoading(false);
-          }}
-        >
-          Save
-        </Button>
-      </Box>
-
-      <ProfileResumeBox mt={8} edit={isEditor} token={token} profile={profile} />
       {(profile.recommendations?.length > 0 || typ === 'a') && (
         <>
           <Heading as="h3" fontSize="2xl" mt={8} mb={4}>Recommendations</Heading>

@@ -8,13 +8,14 @@ import { DateTime } from 'luxon';
 
 export default function MonthYearPicker({ defaultValue, onChange, ...rest }) {
   const defaultDt = typeof defaultValue === 'string' ? DateTime.fromISO(defaultValue) : defaultValue;
-  const [month, setMonth] = useState(defaultDt.toLocaleString({ month: 'numeric' }));
-  const [year, setYear] = useState(defaultDt.toLocaleString({ year: 'numeric' }));
+  const [month, setMonth] = useState(defaultDt?.toLocaleString({ month: 'numeric' }) || '1');
+  const [year, setYear] = useState(defaultDt?.toLocaleString({ year: 'numeric' }) || '');
   const initialRender = useRef(true);
 
   useEffect(() => {
     if (initialRender.current) initialRender.current = false;
-    else if (year.length === 4) onChange(DateTime.fromObject({ day: 1, month, year }).toISO());
+    else if (month && year.length === 4) onChange(DateTime.fromObject({ day: 1, month, year }).toISO());
+    else if (year.length === 0 && !month) onChange(null);
   }, [month, year]);
 
   return (
@@ -26,6 +27,7 @@ export default function MonthYearPicker({ defaultValue, onChange, ...rest }) {
         defaultValue={month}
         onChange={(e) => setMonth(e.target.value)}
       >
+        <option value=""></option>
         {[...Array(13).keys()].slice(1).map((monthNumber) => (
           <option key={monthNumber} value={monthNumber.toString()}>
             {DateTime.now().set({ month: monthNumber }).toLocaleString({ month: 'short' })}
