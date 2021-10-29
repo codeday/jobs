@@ -29,7 +29,7 @@ mutation EditProfile($username: String, $data: AdvisorsProfileEditInput!) {
   }
 }
 
-mutation CreateProfile($username: String, $data: AdvisorsProfileEditInput!) {
+mutation CreateProfile($username: String, $data: AdvisorsProfileCreateInput!) {
   advisors {
     createProfile(username: $username, data: $data) {
       ...ProfileInformation
