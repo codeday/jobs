@@ -1,0 +1,17 @@
+mutation RespondRequest($request: String!, $file: Upload, $response: AdvisorsResponse) {
+  advisors {
+    respondRequest(request: $request, file: $file, response: $response)
+  }
+}
+
+query GetRequest ($request: String!) {
+  advisors {
+    getRequest(request: $request) {
+      givenName
+      familyName
+      email
+      type
+      resumeUrl
+    }
+  }
+}
