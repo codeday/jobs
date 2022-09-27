@@ -70,6 +70,7 @@ export default function ({ hasSession, advisorToken, pendingRequests: pendingReq
       <input
         ref={uploadRef}
         type="file"
+        accept="application/pdf"
         onChange={(e) => {
           if (e.target.files.length > 0) {
             makeUploadFn('RESUME', e.target.files[0])();
