@@ -3,11 +3,12 @@ import React, { useState, useReducer, useRef } from 'react';
 import Content from '@codeday/topo/Molecule/Content';
 import Box, { Grid } from '@codeday/topo/Atom/Box';
 import Text, { Heading } from '@codeday/topo/Atom/Text';
-import Page from '../../../../components/Page';
 import Button from '@codeday/topo/Atom/Button';
 import { default as Textarea } from '@codeday/topo/Atom/Input/Textarea';
 import { useToasts, apiFetch } from '@codeday/topo/utils';
+import Page from '../../../../components/Page';
 import { GetRequest, RespondRequest } from './index.gql';
+import ResumeReview from '../../../../components/ResumeReview';
 
 const QUESTIONS = {
   RESUME: [
@@ -18,35 +19,38 @@ const QUESTIONS = {
     'Overall, what was your assessment of the practice interview?',
     'What subjects should the student focus on to best improve their chances of being hired?',
   ],
-}
+};
 
 export default function ({ token, request, requestId }) {
   const [isSubmitted, setSubmitted] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [response, updateResponse] = useReducer((_prev, [key, value]) => ({ ..._prev, [key]: value }), {});
   const { success, error } = useToasts();
-
+  const [annotatedFile, setAnnotatedFile] = useState();
   const valid = Object.values(response).filter(Boolean).length >= QUESTIONS[request.type].length;
   const title = `${request.type[0]}${request.type.slice(1).toLowerCase()} feedback for ${request.givenName} ${request.familyName}`;
 
-  if (request.type === 'RESUME' && !request.resumeUrl) return (
-    <Page>
-      <Content>Error occurred: resume request had no resume. Please contact volunteer@codeday.org for help.</Content>
-    </Page>
-  );
+  if (request.type === 'RESUME' && !request.resumeUrl) {
+    return (
+      <Page>
+        <Content>Error occurred: resume request had no resume. Please contact volunteer@codeday.org for help.</Content>
+      </Page>
+    );
+  }
 
-  if (isSubmitted) return (
-    <Page>
-      <Content>Thank you for submitting your feedback! We've shared it with the student.</Content>
-    </Page>
-  );
-
+  if (isSubmitted) {
+    return (
+      <Page>
+        <Content>Thank you for submitting your feedback! We've shared it with the student.</Content>
+      </Page>
+    );
+  }
   return (
     <Page title={title}>
       <Content mt={-8}>
         <Heading as="h2" fontSize="4xl" mb={8}>{title}</Heading>
         {request.resumeUrl && (
-          <></>
+          <ResumeReview pdf={request.resumeUrl} annotatedFile={annotatedFile} setAnnotatedFile={setAnnotatedFile} />
         )}
         {QUESTIONS[request.type].map((q) => (
           <>
@@ -65,10 +69,10 @@ export default function ({ token, request, requestId }) {
               try {
                 await apiFetch(
                   print(RespondRequest),
-                  { request: requestId, response /*, file */},
+                  { request: requestId, response, file: new File([Buffer.from(annotatedFile)], 'feedback.pdf')},
                   { 'X-Advisors-Authorization': `Bearer ${token}` },
                 );
-                success('Feedback submitted.')
+                success('Feedback submitted.');
               } catch (ex) {
                 error(ex.toString());
               }
@@ -80,11 +84,10 @@ export default function ({ token, request, requestId }) {
         </Box>
       </Content>
     </Page>
-  )
+  );
 }
 
 export async function getServerSideProps({ params: { token, requestId } }) {
-
   const request = (await apiFetch(
     print(GetRequest),
     { request: requestId },

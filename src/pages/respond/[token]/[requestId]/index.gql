@@ -1,4 +1,4 @@
-mutation RespondRequest($request: String!, $file: Upload, $response: AdvisorsResponse) {
+mutation RespondRequest($request: String!, $file: Upload, $response: AdvisorsJSONObject) {
   advisors {
     respondRequest(request: $request, file: $file, response: $response)
   }

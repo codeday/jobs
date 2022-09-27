@@ -13,4 +13,12 @@ module.exports = {
       domain: process.env.AUTH0_DOMAIN,
     },
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.node = {
+        fs: 'empty',
+      };
+    }
+    return config;
+  },
 };
