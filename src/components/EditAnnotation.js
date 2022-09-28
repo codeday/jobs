@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@codeday/topo/Atom/Button';
-import {Textarea} from '@codeday/topo/Atom/Input';
+import {default as Textarea} from '@codeday/topo/Atom/Input/Textarea';
 import Box from '@codeday/topo/Atom/Box';
 import PropTypes from 'prop-types';
 import { AnnotationFactory } from 'annotpdf';
@@ -56,7 +56,7 @@ export default function EditAnnotation({
     </Button>
   );
   return (
-    <InfoBox buttons={editing ? <Box>{okButton} {trashButton}</Box> : <Box>{editButton} {deleteButton}</Box>} {...props} heading={`Feedback #${idx}`}>
+    <InfoBox colorScheme="yellow" buttons={editing ? <Box>{okButton} {trashButton}</Box> : <Box>{editButton} {deleteButton}</Box>} {...props} heading={`Annotation`}>
       {editing
         ? <Textarea value={tempContents} onChange={(e) => { setTempContents(e.target.value); }} /> : annotation.contents}
       {children}

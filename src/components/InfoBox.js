@@ -1,22 +1,22 @@
 import React from 'react';
 import Box, { Flex } from '@codeday/topo/Atom/Box';
-import { useColorModeValue } from '@codeday/topo/Theme';
 
 export default function InfoBox({
-  children, heading, headingSize, buttons, nested, ...props
+  children, heading, headingSize, buttons, nested, colorScheme: _colorScheme, ...props
 }) {
+  const colorScheme = _colorScheme ?? 'gray'
   return (
     <Box
       d="block"
       borderWidth={3}
       rounded={nested ? 1 : 3}
-      borderColor={useColorModeValue(nested ? 'gray.100' : undefined, nested ? 'gray.1200' : undefined)}
+      borderColor={nested ? `${colorScheme}.100` : `${colorScheme}.200`}
       m={nested ? 0 : 1}
       {...props}
     >
       {heading && (
         <Flex
-          backgroundColor={useColorModeValue(nested ? 'gray.100' : 'gray.200', nested ? 'gray.1000' : 'gray.1200')}
+          backgroundColor={nested ? `${colorScheme}.100` : `${colorScheme}.200`}
           fontSize={headingSize}
           justifyContent="space-between"
           fontWeight="bold"

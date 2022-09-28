@@ -9,6 +9,7 @@ import { useToasts, apiFetch } from '@codeday/topo/utils';
 import Page from '../../../../components/Page';
 import { GetRequest, RespondRequest } from './index.gql';
 import ResumeReview from '../../../../components/ResumeReview';
+import ResumeReviewGuide from '../../../../components/ResumeReviewGuide';
 
 const QUESTIONS = {
   RESUME: [
@@ -21,7 +22,7 @@ const QUESTIONS = {
   ],
 };
 
-export default function ({ token, request, requestId }) {
+export default function ({ token, request, requestId, response: serverResponse, responseFile: serverResponseFile }) {
   const [isSubmitted, setSubmitted] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [response, updateResponse] = useReducer((_prev, [key, value]) => ({ ..._prev, [key]: value }), {});
@@ -38,10 +39,12 @@ export default function ({ token, request, requestId }) {
     );
   }
 
-  if (isSubmitted) {
+  if (serverResponse || serverResponseFile || isSubmitted) {
     return (
       <Page>
-        <Content>Thank you for submitting your feedback! We've shared it with the student.</Content>
+        <Content textAlign="center" mt={-8}>
+          We have shared your feedback/advice with {request.givenName} {request.familyName}. Thank you for your time!
+        </Content>
       </Page>
     );
   }
@@ -49,9 +52,16 @@ export default function ({ token, request, requestId }) {
     <Page title={title}>
       <Content mt={-8}>
         <Heading as="h2" fontSize="4xl" mb={8}>{title}</Heading>
-        {request.resumeUrl && (
-          <ResumeReview pdf={request.resumeUrl} annotatedFile={annotatedFile} setAnnotatedFile={setAnnotatedFile} />
-        )}
+      </Content>
+      {request.resumeUrl && (
+        <>
+          <Content><ResumeReviewGuide /></Content>
+          <Content maxW="container.xl">
+            <ResumeReview pdf={request.resumeUrl} annotatedFile={annotatedFile} setAnnotatedFile={setAnnotatedFile} />
+          </Content>
+        </>
+      )}
+      <Content>
         {QUESTIONS[request.type].map((q) => (
           <>
             <Heading as="h4" fontSize="md">{q}</Heading>
@@ -73,6 +83,7 @@ export default function ({ token, request, requestId }) {
                   { 'X-Advisors-Authorization': `Bearer ${token}` },
                 );
                 success('Feedback submitted.');
+                setSubmitted(true);
               } catch (ex) {
                 error(ex.toString());
               }
@@ -88,17 +99,19 @@ export default function ({ token, request, requestId }) {
 }
 
 export async function getServerSideProps({ params: { token, requestId } }) {
-  const request = (await apiFetch(
+  const { request, response, responseFile } = (await apiFetch(
     print(GetRequest),
     { request: requestId },
     { 'X-Advisors-Authorization': `Bearer ${token}` },
-  )).advisors.getRequest;
+  )).advisors.getRequestAssignment;
 
   return {
     props: {
       token,
       request,
       requestId,
+      response: response || null,
+      responseFile: responseFile || null,
     },
   };
 }

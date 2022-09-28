@@ -6,12 +6,16 @@ mutation RespondRequest($request: String!, $file: Upload, $response: AdvisorsJSO
 
 query GetRequest ($request: String!) {
   advisors {
-    getRequest(request: $request) {
-      givenName
-      familyName
-      email
-      type
-      resumeUrl
+    getRequestAssignment(request: $request) {
+      request {
+        givenName
+        familyName
+        email
+        type
+        resumeUrl
+      }
+      response
+      responseFile
     }
   }
 }
