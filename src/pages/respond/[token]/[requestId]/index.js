@@ -79,7 +79,7 @@ export default function ({ token, request, requestId, response: serverResponse, 
               try {
                 await apiFetch(
                   print(RespondRequest),
-                  { request: requestId, response, file: new File([Buffer.from(annotatedFile)], 'feedback.pdf')},
+                  { request: requestId, response, file: (annotatedFile ? new File([Buffer.from(annotatedFile)], 'feedback.pdf') : undefined)},
                   { 'X-Advisors-Authorization': `Bearer ${token}` },
                 );
                 success('Feedback submitted.');
