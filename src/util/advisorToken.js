@@ -29,7 +29,7 @@ export async function getAdvisorToken(session, onlyAdvisors) {
   if (typ === 'com' && onlyAdvisors) return null;
 
   return sign(
-    { typ, username: typ === 'a' ? undefined : session.user.name },
+    { typ, username: session.user.name },
     serverRuntimeConfig.advisorsSecret,
     { audience: serverRuntimeConfig.advisorsAudience, expiresIn: '1w' },
   );
